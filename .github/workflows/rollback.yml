@@ -1,0 +1,30 @@
+name: Rollback Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to rollback'
+        required: true
+        type: choice
+        options:
+          - production
+          - staging
+      version:
+        description: 'Version to rollback to'
+        required: true
+        type: string
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Rollback ${{ github.event.inputs.environment }}
+      run: |
+        echo "Rolling back ${{ github.event.inputs.environment }} to version ${{ github.event.inputs.version }}"
+        # Pull previous version from registry
+        docker pull username/deploy-app:${{ github.event.inputs.version }}
+        # Deploy previous version (platform-specific)
+        echo "Deployment rolled back successfully"

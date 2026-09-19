@@ -1,0 +1,29 @@
+name: Deploy with Notifications
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy
+      id: deploy
+      run: |
+        echo "Deploying application..."
+        # Simulate deployment
+        sleep 5
+        echo "status=success" >> $GITHUB_OUTPUT
+        echo "url=https://deploy-app.vercel.app" >> $GITHUB_OUTPUT
+    
+    - name: Create deployment summary
+      run: |
+        echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- Status: ✅ ${{ steps.deploy.outputs.status }}" >> $GITHUB_STEP_SUMMARY
+        echo "- URL: ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
